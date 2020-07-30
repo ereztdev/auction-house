@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class ItemController extends Controller
 {
@@ -28,23 +30,39 @@ class ItemController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * The right and safer way to execute auth on API calls is with Auth2
+     * email:joe_tester@gmail.com
+     * password:password
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Store a newly created resource in storage.
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        //
+        $credentials = $request->only('email', 'password');
+        if (!Auth::attempt($credentials)) {
+            return Response::api_fail([]);
+        }
+
+        $item = Item::create([
+            'cat_id' => $request->cat_id,
+            'name' => $request->name,
+            'min_price' => $request->min_price,
+        ]);
+        $item->save();
+
+        return Response::api_success($item);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Item  $item
+     * @param \App\Item $item
      * @return \Illuminate\Http\Response
      */
-    public function show(Item $item)
+    public
+    function show(Item $item)
     {
         //
     }
@@ -52,10 +70,11 @@ class ItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Item  $item
+     * @param \App\Item $item
      * @return \Illuminate\Http\Response
      */
-    public function edit(Item $item)
+    public
+    function edit(Item $item)
     {
         //
     }
@@ -63,11 +82,12 @@ class ItemController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Item  $item
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Item $item
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Item $item)
+    public
+    function update(Request $request, Item $item)
     {
         //
     }
@@ -75,10 +95,11 @@ class ItemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Item  $item
+     * @param \App\Item $item
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Item $item)
+    public
+    function destroy(Item $item)
     {
         //
     }

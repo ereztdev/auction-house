@@ -4,6 +4,7 @@
 
 use App\User;
 use Faker\Generator as Faker;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /*
@@ -16,13 +17,29 @@ use Illuminate\Support\Str;
 | model instances for testing / seeding your application's database.
 |
 */
+$user = User::where('email', '=', 'joe_testder@gmail.com')->first();
+if (is_null($user)){
+    $user = User::create([
+        'name' => 'joe',
+        'email' => 'joe_tester@gmail.com',
+        'email_verified_at' => now(),
+//        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        'password' => Hash::make('password'),
+        'api_token' => Str::random(60),
+        'remember_token' => Str::random(10),
+    ]);
+    $user->save();
+}
 
 $factory->define(User::class, function (Faker $faker) {
+
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+//        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        'password' => Hash::make('password'),
+        'api_token' => Str::random(60),
         'remember_token' => Str::random(10),
     ];
 });
