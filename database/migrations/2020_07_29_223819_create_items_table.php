@@ -15,7 +15,11 @@ class CreateItemsTable extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
+            $table->integer('cat_id');
+            $table->text('name');
+            $table->float('min_price');
             $table->timestamps();
+            $table->softDeletes('deleted_at', 0);
         });
     }
 
