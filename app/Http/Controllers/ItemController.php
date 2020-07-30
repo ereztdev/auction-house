@@ -9,25 +9,6 @@ use Illuminate\Support\Facades\Response;
 
 class ItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * The right and safer way to execute auth on API calls is with Auth2
@@ -59,48 +40,29 @@ class ItemController extends Controller
      * Display the specified resource.
      *
      * @param \App\Item $item
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public
-    function show(Item $item)
+    function show($id, Item $item, Request $request)
     {
-        //
-    }
+        $credentials = $request->only('email', 'password');
+        if (!Auth::attempt($credentials)) {
+            return Response::api_fail([], 'unauthorized');
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Item $item
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function edit(Item $item)
-    {
-        //
-    }
+        $item = Item::find($id);
+        $bids = $item->bids()->get();
+        $minBid = $bids->min('bid_amount');
+        $highestBid = $bids->where('bid_amount', $bids->max('bid_amount'))->first();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Item $item
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function update(Request $request, Item $item)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Item $item
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function destroy(Item $item)
-    {
-        //
+        $res = [
+            'id' => $item->id,
+            'name' => $item->name,
+            'min_bid' => $minBid,
+            'highest_bid' => $highestBid->bid_amount,
+            'highest_bid_user_id' => $highestBid->user_id,
+        ];
+        return Response::api_success($res, 'fetched item successfully');
     }
 }

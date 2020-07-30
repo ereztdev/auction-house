@@ -8,4 +8,11 @@ class Item extends Model
 {
     protected $table = 'items';
     protected $fillable = ['cat_id','name','min_price'];
+
+    public function bids()
+    {
+        return $this->hasMany('App\Bid');
+
+    }
+
 }
