@@ -57,10 +57,8 @@ class BidController extends Controller
             'item_id' => 'required'
         ]);
 
-        if ($validator->fails()) {
-            return Response::api_fail($validator->errors(), 'unauthorized');
-        }
-
+        //bid model will be created regardless of being kosher
+        //would also need to treat duplicity of same-user+same-bid
         $bid = Bid::create([
             'item_id' => $item->id,
             'user_id' => $user->id,
@@ -68,22 +66,45 @@ class BidController extends Controller
         ]);
         $bid->save();
 
-        $item->min_price = $request->bid;
-        $item->save();
-
+        if (!$validator->fails()) {
+            $item->min_price = $request->bid;
+            $item->save();
+    }
         return Response::api_success($item, "your {$request->bid} bid has been successfully registered");
 
     }
 
+
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Bid  $bid
-     * @return \Illuminate\Http\Response
+     * Display the user with the highest bid.
+     * @param Request $request
+     * @param Bid $bid
+     * @return
      */
-    public function show(Bid $bid)
+    public function getItem(Request $request,Bid $bid)
     {
-        //
+        if (!$request->info){
+            $validator = Validator::make($request->all(), [
+                'info' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return Response::api_fail($validator->errors(), '');
+            }
+        }
+        $highestBid = Bid::where(['bid_amount' => Bid::max('bid_amount')])->with(['user','item'])->first();
+        $item = $highestBid->item;
+        $itemHighestBid =
+        dd($highestBid->bid);
+        $res = [
+            'id' => $highestBid->id,
+            'name' => $highestBid->item->name,
+            'min_bid' =>$highestBid->bid_amount,
+            'highest_bid' =>null,
+            'highest_bid_user_id' =>null,
+
+
+        ];
+
     }
 
     /**
