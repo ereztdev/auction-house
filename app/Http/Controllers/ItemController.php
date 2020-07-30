@@ -42,7 +42,7 @@ class ItemController extends Controller
     {
         $credentials = $request->only('email', 'password');
         if (!Auth::attempt($credentials)) {
-            return Response::api_fail([]);
+            return Response::api_fail([], 'not authorized');
         }
 
         $item = Item::create([
@@ -52,7 +52,7 @@ class ItemController extends Controller
         ]);
         $item->save();
 
-        return Response::api_success($item);
+        return Response::api_success($item,'success');
     }
 
     /**

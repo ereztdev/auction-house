@@ -16,5 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 //Route::middleware('auth:api')->post('/add-item', 'ItemController@store');
 //Route::post('/add-item', 'ItemController@store');
-Route::post('/add-item', 'ItemController@store')->name('items.store');
+Route::post('/add-item', 'ItemController@store');
+Route::post('/bid-item', 'BidController@store');
+Route::post('/bid-user', 'BidController@getHighestBidUser');
 

@@ -24,15 +24,17 @@ class APIResponseType extends ServiceProvider
      */
     public function boot()
     {
-        Response::macro('api_success', function ($value) {
+        Response::macro('api_success', function ($value, $message) {
             return Response::json([
                 'success' => true,
+                'message' => $message,
                 'data' => $value,
             ], 201);
         });
-        Response::macro('api_fail', function ($value) {
+        Response::macro('api_fail', function ($value, $message) {
             return Response::json([
                 'success' => false,
+                'message' => $message,
                 'data' => $value,
             ], 401);
         });
