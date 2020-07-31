@@ -26,7 +26,7 @@ webserver installed there (Apache2/NGINX/etc).
   - Add item
   - Different bids
   - fetching an item with a custom JSON
-
+- Run the tests `php artisan test`
 
 Thanks,
 Erez
