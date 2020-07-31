@@ -12,8 +12,8 @@ webserver installed there (Apache2/NGINX/etc).
 - **Composer** - PHP Dependency Manager, if you don't have it, you can [download it right here](https://getcomposer.org/download/).
 
 #### Installation Procedure
-- clone this repo (`git clone https://github.com/ereztdev/sia.git`) into your webserver
-- switch into the repo directory where you pulled the repo: (`cd sia`)
+- clone this repo (`git clone https://github.com/ereztdev/auction-house.git`) into your webserver
+- switch into the repo directory where you pulled the repo: (`cd auction-house`)
 - Install PHP dependencies (`composer install`)
 - environment:
   - In the project root, you will have to create an `.env` environment file: `cp .env.example .env`
