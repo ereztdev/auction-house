@@ -29,7 +29,7 @@ class APIResponseType extends ServiceProvider
                 'success' => true,
                 'message' => $message,
                 'data' => $value,
-            ], 201);
+            ], 200);
         });
         Response::macro('api_fail', function ($value, $message) {
             return Response::json([
