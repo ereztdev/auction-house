@@ -53,6 +53,9 @@ class ItemController extends Controller
 
         $item = Item::find($id);
         $bids = $item->bids()->get();
+        $hasBids = count($bids) > 0;
+        if (!$hasBids)
+            return Response::api_fail([], 'no bids');
         $minBid = $bids->min('bid_amount');
         $highestBid = $bids->where('bid_amount', $bids->max('bid_amount'))->first();
 
@@ -60,8 +63,8 @@ class ItemController extends Controller
             'id' => $item->id,
             'name' => $item->name,
             'min_bid' => $minBid,
-            'highest_bid' => $highestBid->bid_amount,
-            'highest_bid_user_id' => $highestBid->user_id,
+            'highest_bid' => $highestBid ?? $highestBid->bid_amount,
+            'highest_bid_user_id' => $highestBid ?? $highestBid->user_id,
         ];
         return Response::api_success($res, 'fetched item successfully');
     }
